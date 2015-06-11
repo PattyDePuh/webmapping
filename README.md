@@ -1,7 +1,6 @@
 # webmapping
 Abschlussaufgabe Webmapping SS2015
 
-
 ### Aufgaben
 1. Datenbank füllen [André, Kevin]
 2. Homepage erstellen [Andre @askierke, Mario @Mario-91]
@@ -18,3 +17,8 @@ Abschlussaufgabe Webmapping SS2015
 
 Webseite:
 http://vm372.rz.uni‐osnabrueck.de:8080/WebMapping/Abschlussaufgabe
+
+### Bibliotheken:
+ - [jQuery](http://jquery.com/)
+ - [OpenLayers v3](http://openlayers.org/)
+
