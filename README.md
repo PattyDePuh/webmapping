@@ -10,3 +10,11 @@ Abschlussaufgabe Webmapping SS2015
 5. Routing
 6. optional: Visualisierung weiterer Layer
 
+
+### Links
+Webserver: vm372.rz.uni‐osnabrueck.de
+Login: student : lagestudent
+Geoserver: http://vm372.rz.uni-osnabrueck.de:8080/geoserver/
+
+Webseite:
+http://vm372.rz.uni‐osnabrueck.de:8080/WebMapping/Abschlussaufgabe
