@@ -13,6 +13,13 @@ body {
 	
 }
 
+#routing {
+	height: 500px;
+	width: 800px;
+	margin-top: 50px;
+	margin-left: 10px;
+}
+
 #contextMenu {
   position: absolute;
   display:none;
