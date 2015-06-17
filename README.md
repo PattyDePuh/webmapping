@@ -6,7 +6,7 @@ Abschlussaufgabe Webmapping SS2015
 2. Homepage erstellen [Andre @askierke, Mario @Mario-91]
 3. Änderung der Daten interaktiv auf der HP [Patrick @PattyDePuh, Simon @shoetten]
 4. Bereichsselektion [Stefan, Alex]
-5. Routing [Johanna, Jannis]
+5. Routing [Johanna, Jannes @SchoGEO]
 6. optional: Visualisierung weiterer Layer
 
 
