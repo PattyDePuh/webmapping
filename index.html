@@ -1,119 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <title>WebGIS</title>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <title>WebGIS</title>
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <link href="http://getbootstrap.com/dist/css/bootstrap.css" rel="stylesheet" type="text/css" />
-	<script src="http://getbootstrap.com/dist/js/bootstrap.js"></script>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	
+	<!-- OpenLayers -->
+  <script src="http://openlayers.org/en/v3.6.0/build/ol.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="http://openlayers.org/en/v3.6.0/css/ol.css" type="text/css">
+
+  <!-- Bootstrap -->
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css" rel="stylesheet" type="text/css" />
+	<script src="js/bootstrap.min.js"></script>
   
-	<link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css" rel="stylesheet" type="text/css" />
-  
-    <script src="js/npm.js"></script>
-    <script src="http://openlayers.org/en/v3.6.0/build/ol.js" type="text/javascript"></script>
+  <link href='style.css' rel='stylesheet' type='text/css'>
 
-    <!-- Bootstrap -->
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="http://openlayers.org/en/v3.6.0/css/ol.css" type="text/css">
-    <link href='style.css' rel='stylesheet' type='text/css'>
-
-    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
-      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-    <![endif]-->
-  </head>
-  <body>
-  	
-  	<nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">WebGIS</a>
-        </div>
-        <div id="navbar" class="collapse navbar-collapse">
-          <ul class="nav navbar-nav">
-            <li class="dropdown">
-          		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Bearbeiten <span class="caret"></span></a>
-         		 <ul class="dropdown-menu" role="menu">
-            	<li><a href="#">Objekt bearbeiten</a></li>
-            	<li><a href="#">Objekt löschen</a></li>
-            	<li><a href="#">Objektattribute anzeigen</a></li>
-           		</ul>
-           </li>
-            <li><a href="#select">Bereichselektion</a></li>
-            <li><a href="#routing">Routing</a></li>
-           </ul>
-          
-        </div><!--/.nav-collapse -->
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+	
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">WebGIS</a>
       </div>
-    </nav>
-    <div id="map" class="map" >
-	    <script type="text/javascript">
-	      var map = new ol.Map({
-	        target: 'map',
-	        layers: [
-	          new ol.layer.Tile({
-	            source: new ol.source.MapQuest({layer: 'osm'})
-	          })
-	        ],
-	        view: new ol.View({
-	          center: ol.proj.transform([8.047190 ,52.279562] , 'EPSG:4326', 'EPSG:3857'),
-	          zoom: 13
-	        })
-	      });
-	      
-	      $(".map, #contextMenu").bind("contextmenu",function(e){
-				return false;
-			});
-	      
-	      $(function() {
-  
-			  var $contextMenu = $("#contextMenu");
-			  
-			  $("#map").mousedown(function(e) {
-			  	if (e.which == 3){
-				    $contextMenu.css({
-				      display: "block",
-				      left: e.pageX,
-				      top: e.pageY
-				    });
-				    if (document.addEventListener) {
-	        			document.addEventListener('contextmenu', function(e) {
-	           				e.preventDefault();
-	        			}, false);
-	    			} else {
-	        			document.attachEvent('oncontextmenu', function() {
-	           				window.event.returnValue = false;
-	        			});
-    				}	
-			    return false;
-			   }
-			  });
-			 
-			  
-			  $contextMenu.on("click", "a", function() {
-			     $contextMenu.hide();
-			  });
-  
-			});
-	    </script>
+      <div id="navbar" class="collapse navbar-collapse">
+        <ul class="nav navbar-nav">
+          <li class="dropdown">
+        		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Bearbeiten <span class="caret"></span></a>
+       		 <ul class="dropdown-menu" role="menu">
+          	<li><a href="#">Objekt bearbeiten</a></li>
+          	<li><a href="#">Objekt löschen</a></li>
+          	<li><a href="#">Objektattribute anzeigen</a></li>
+         		</ul>
+         </li>
+          <li><a href="#select">Bereichselektion</a></li>
+          <li><a href="#routing">Routing</a></li>
+         </ul>
+        
+      </div><!--/.nav-collapse -->
+    </div>
+  </nav>
+  <div id="map" class="map" >
+    <script type="text/javascript">
+      var map = new ol.Map({
+        target: 'map',
+        layers: [
+          new ol.layer.Tile({
+            source: new ol.source.MapQuest({layer: 'osm'})
+          })
+        ],
+        view: new ol.View({
+          center: ol.proj.transform([8.047190 ,52.279562] , 'EPSG:4326', 'EPSG:3857'),
+          zoom: 13
+        })
+      });
+      
+      $(".map, #contextMenu").bind("contextmenu",function(e){
+			return false;
+		});
+      
+      $(function() {
+
+		  var $contextMenu = $("#contextMenu");
+		  
+		  $("#map").mousedown(function(e) {
+		  	if (e.which == 3){
+			    $contextMenu.css({
+			      display: "block",
+			      left: e.pageX,
+			      top: e.pageY
+			    });
+			    if (document.addEventListener) {
+        			document.addEventListener('contextmenu', function(e) {
+           				e.preventDefault();
+        			}, false);
+    			} else {
+        			document.attachEvent('oncontextmenu', function() {
+           				window.event.returnValue = false;
+        			});
+  				}	
+		    return false;
+		   }
+		  });
+		 
+		  
+		  $contextMenu.on("click", "a", function() {
+		     $contextMenu.hide();
+		  });
+
+		});
+    </script>
 	</div>
-	<br>
-	  
-	  
+
 	<div id="routing"> 
 		<h3> Routenplaner </h3>
 		<br/>
@@ -129,16 +125,16 @@
 		<button type="submit" class="btn btn-default">Route berechnen</button>
 	  </form>
 	</div>
-	
-	
+
 	<div id="contextMenu" class="dropdown clearfix">
-    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
-      <li><a tabindex="-1" href="#">Objekt bearbeiten</a></li>
-      <li><a tabindex="-1" href="#">Objekt löschen</a></li>
-      <li><a tabindex="-1" href="#">Objektattribute anzeigen</a></li>
-      <li><a tabindex="-1" href="#">Abbrechen</a></li>
-      </ul>
-	
-	
-  </body>
+	  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
+	    <li><a tabindex="-1" href="#">Objekt bearbeiten</a></li>
+	    <li><a tabindex="-1" href="#">Objekt löschen</a></li>
+	    <li><a tabindex="-1" href="#">Objektattribute anzeigen</a></li>
+	    <li><a tabindex="-1" href="#">Abbrechen</a></li>
+	    </ul>
+	</div>
+
+
+</body>
 </html>
