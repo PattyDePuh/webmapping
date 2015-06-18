@@ -16,7 +16,7 @@ Abschlussaufgabe Webmapping SS2015
  - Geoserver: http://vm372.rz.uni-osnabrueck.de:8080/geoserver/
 
 Webseite:
-http://vm372.rz.uni‐osnabrueck.de:8080/WebMapping/Abschlussaufgabe
+http://vm372.rz.uni-osnabrueck.de:8080/WebMapping/Abschlussaufgabe/index.html
 
 ### Bibliotheken:
  - [jQuery](http://jquery.com/)
