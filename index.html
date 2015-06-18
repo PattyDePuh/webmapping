@@ -7,7 +7,7 @@
   <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
   <title>WebGIS</title>
 
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <!-- jQuery -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
 	
 	<!-- OpenLayers -->
@@ -19,7 +19,9 @@
   <link href="http://getbootstrap.com/2.3.2/assets/css/bootstrap-responsive.css" rel="stylesheet" type="text/css" />
 	<script src="js/bootstrap.min.js"></script>
   
+  <!-- custom styles and code -->
   <link href='style.css' rel='stylesheet' type='text/css'>
+  <script src="js/map.js"></script>
 
   <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -45,10 +47,10 @@
         <ul class="nav navbar-nav">
           <li class="dropdown">
         		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Bearbeiten <span class="caret"></span></a>
-       		 <ul class="dropdown-menu" role="menu">
-          	<li><a href="#">Objekt bearbeiten</a></li>
-          	<li><a href="#">Objekt löschen</a></li>
-          	<li><a href="#">Objektattribute anzeigen</a></li>
+       		 	<ul class="dropdown-menu" role="menu">
+	          	<li><a href="#">Objekt bearbeiten</a></li>
+	          	<li><a href="#">Objekt löschen</a></li>
+	          	<li><a href="#">Objektattribute anzeigen</a></li>
          		</ul>
          </li>
           <li><a href="#select">Bereichselektion</a></li>
@@ -58,61 +60,13 @@
       </div><!--/.nav-collapse -->
     </div>
   </nav>
+
   <div id="map" class="map" >
-    <script type="text/javascript">
-      var map = new ol.Map({
-        target: 'map',
-        layers: [
-          new ol.layer.Tile({
-            source: new ol.source.MapQuest({layer: 'osm'})
-          })
-        ],
-        view: new ol.View({
-          center: ol.proj.transform([8.047190 ,52.279562] , 'EPSG:4326', 'EPSG:3857'),
-          zoom: 13
-        })
-      });
-      
-      $(".map, #contextMenu").bind("contextmenu",function(e){
-			return false;
-		});
-      
-      $(function() {
-
-		  var $contextMenu = $("#contextMenu");
-		  
-		  $("#map").mousedown(function(e) {
-		  	if (e.which == 3){
-			    $contextMenu.css({
-			      display: "block",
-			      left: e.pageX,
-			      top: e.pageY
-			    });
-			    if (document.addEventListener) {
-        			document.addEventListener('contextmenu', function(e) {
-           				e.preventDefault();
-        			}, false);
-    			} else {
-        			document.attachEvent('oncontextmenu', function() {
-           				window.event.returnValue = false;
-        			});
-  				}	
-		    return false;
-		   }
-		  });
-		 
-		  
-		  $contextMenu.on("click", "a", function() {
-		     $contextMenu.hide();
-		  });
-
-		});
-    </script>
+		<!-- see js/map.js -->
 	</div>
 
 	<div id="routing"> 
-		<h3> Routenplaner </h3>
-		<br/>
+		<h3>Routenplaner</h3>
 		<form class="form-inline">
 		<div class="form-group">
 		  <label for="Start">Startpunkt</label>
