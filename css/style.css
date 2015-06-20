@@ -24,3 +24,10 @@ body {
   position: absolute;
   display:none;
 }
+
+
+
+/* editing styles */
+.edit {
+	display: none;
+}

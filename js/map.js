@@ -5,9 +5,10 @@ $(function() {
   var geojsonFormat = new ol.format.GeoJSON();
 
   var roadsSource = new ol.source.Vector({
+    format: geojsonFormat,
     loader: function(extent, resolution, projection) {
       var url = 'http://vm372.rz.uni-osnabrueck.de:8080/geoserver/webmapping_webgis/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=webmapping_webgis:roads&' +
-                'outputFormat=text/javascript&format_options=callback:loadFeatures' +
+                'outputFormat=text/javascript&format_options=callback:loadRoadFeatures' +
                 '&srsname=EPSG:3857&bbox=' + extent.join(',') + ',EPSG:3857';
       // use jsonp: false to prevent jQuery from adding the "callback"
       // parameter to the URL
@@ -18,10 +19,15 @@ $(function() {
     }))
   });
 
+  window.loadRoadFeatures = function(response) {
+    roadsSource.addFeatures(geojsonFormat.readFeatures(response));
+  };  
+
   var railwaysSource = new ol.source.Vector({
+    format: geojsonFormat,
     loader: function(extent, resolution, projection) {
       var url = 'http://vm372.rz.uni-osnabrueck.de:8080/geoserver/webmapping_webgis/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=webmapping_webgis:railways&' +
-                'outputFormat=text/javascript&format_options=callback:loadFeatures' +
+                'outputFormat=text/javascript&format_options=callback:loadRailwaysFeatures' +
                 '&srsname=EPSG:3857&bbox=' + extent.join(',') + ',EPSG:3857';
       // use jsonp: false to prevent jQuery from adding the "callback"
       // parameter to the URL
@@ -31,12 +37,17 @@ $(function() {
       maxZoom: 19
     }))
   });
+
+  window.loadRailwaysFeatures = function(response) {
+    railwaysSource.addFeatures(geojsonFormat.readFeatures(response));
+  };
 
 
   var buildingsSource = new ol.source.Vector({
+    format: geojsonFormat,
     loader: function(extent, resolution, projection) {
       var url = 'http://vm372.rz.uni-osnabrueck.de:8080/geoserver/webmapping_webgis/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=webmapping_webgis:buildings&' +
-                'outputFormat=text/javascript&format_options=callback:loadFeatures' +
+                'outputFormat=text/javascript&format_options=callback:loadBuildingsFeatures' +
                 '&srsname=EPSG:3857&bbox=' + extent.join(',') + ',EPSG:3857';
       // use jsonp: false to prevent jQuery from adding the "callback"
       // parameter to the URL
@@ -46,6 +57,10 @@ $(function() {
       maxZoom: 19
     }))
   });
+
+  window.loadBuildingsFeatures = function(response) {
+    buildingsSource.addFeatures(geojsonFormat.readFeatures(response));
+  };  
   
 
   // add base map
@@ -113,12 +128,6 @@ $(function() {
     tipLabel: 'Legende' // Optional label for button
   });
   map.addControl(layerSwitcher);
-  
-  window.loadFeatures = function(response) {
-    roadsSource.addFeatures(geojsonFormat.readFeatures(response));
-    railwaysSource.addFeatures(geojsonFormat.readFeatures(response));
-    buildingsSource.addFeatures(geojsonFormat.readFeatures(response));
-  };  
   
 
   // register context menu
@@ -199,7 +208,7 @@ $(function() {
   // click listener
   $("#edit").click(function() {
     $(this).parent().toggleClass("active");
-
+    $(".edit").fadeToggle(120);
 
     return false;
   });
