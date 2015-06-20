@@ -1,54 +1,53 @@
 // dom ready
 $(function() {
 
-    // format used to parse WFS GetFeature responses
-var geojsonFormat = new ol.format.GeoJSON();
+  // format used to parse WFS GetFeature responses
+  var geojsonFormat = new ol.format.GeoJSON();
 
-var roadsSource = new ol.source.Vector({
-  loader: function(extent, resolution, projection) {
-    var url = 'http://vm372.rz.uni-osnabrueck.de:8080/geoserver/webmapping_webgis/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=webmapping_webgis:roads&' +
-        'outputFormat=text/javascript&format_options=callback:loadFeatures' +
-        '&srsname=EPSG:3857&bbox=' + extent.join(',') + ',EPSG:3857';
-    // use jsonp: false to prevent jQuery from adding the "callback"
-    // parameter to the URL
-   $.ajax({url: url, dataType: 'jsonp', jsonp: false});
-  },
-  strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-    maxZoom: 19
-  }))
-});
+  var roadsSource = new ol.source.Vector({
+    loader: function(extent, resolution, projection) {
+      var url = 'http://vm372.rz.uni-osnabrueck.de:8080/geoserver/webmapping_webgis/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=webmapping_webgis:roads&' +
+                'outputFormat=text/javascript&format_options=callback:loadFeatures' +
+                '&srsname=EPSG:3857&bbox=' + extent.join(',') + ',EPSG:3857';
+      // use jsonp: false to prevent jQuery from adding the "callback"
+      // parameter to the URL
+     $.ajax({url: url, dataType: 'jsonp', jsonp: false});
+    },
+    strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+      maxZoom: 19
+    }))
+  });
 
-var railwaysSource = new ol.source.Vector({
-  loader: function(extent, resolution, projection) {
-    var url = 'http://vm372.rz.uni-osnabrueck.de:8080/geoserver/webmapping_webgis/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=webmapping_webgis:railways&' +
-        'outputFormat=text/javascript&format_options=callback:loadFeatures' +
-        '&srsname=EPSG:3857&bbox=' + extent.join(',') + ',EPSG:3857';
-    // use jsonp: false to prevent jQuery from adding the "callback"
-    // parameter to the URL
-    $.ajax({url: url, dataType: 'jsonp', jsonp: false});
-  },
-  strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-    maxZoom: 19
-  }))
-});
+  var railwaysSource = new ol.source.Vector({
+    loader: function(extent, resolution, projection) {
+      var url = 'http://vm372.rz.uni-osnabrueck.de:8080/geoserver/webmapping_webgis/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=webmapping_webgis:railways&' +
+                'outputFormat=text/javascript&format_options=callback:loadFeatures' +
+                '&srsname=EPSG:3857&bbox=' + extent.join(',') + ',EPSG:3857';
+      // use jsonp: false to prevent jQuery from adding the "callback"
+      // parameter to the URL
+      $.ajax({url: url, dataType: 'jsonp', jsonp: false});
+    },
+    strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+      maxZoom: 19
+    }))
+  });
 
 
-var buildingsSource = new ol.source.Vector({
-  loader: function(extent, resolution, projection) {
-    var url = 'http://vm372.rz.uni-osnabrueck.de:8080/geoserver/webmapping_webgis/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=webmapping_webgis:buildings&' +
-        'outputFormat=text/javascript&format_options=callback:loadFeatures' +
-        '&srsname=EPSG:3857&bbox=' + extent.join(',') + ',EPSG:3857';
-    // use jsonp: false to prevent jQuery from adding the "callback"
-    // parameter to the URL
-    $.ajax({url: url, dataType: 'jsonp', jsonp: false});
-  },
-  strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-    maxZoom: 19
- }))
-});
+  var buildingsSource = new ol.source.Vector({
+    loader: function(extent, resolution, projection) {
+      var url = 'http://vm372.rz.uni-osnabrueck.de:8080/geoserver/webmapping_webgis/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=webmapping_webgis:buildings&' +
+                'outputFormat=text/javascript&format_options=callback:loadFeatures' +
+                '&srsname=EPSG:3857&bbox=' + extent.join(',') + ',EPSG:3857';
+      // use jsonp: false to prevent jQuery from adding the "callback"
+      // parameter to the URL
+      $.ajax({url: url, dataType: 'jsonp', jsonp: false});
+    },
+    strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+      maxZoom: 19
+    }))
+  });
   
 
-  
   // add base map
   var map = new ol.Map({
     target: 'map',
@@ -111,17 +110,18 @@ var buildingsSource = new ol.source.Vector({
   });
   
   var layerSwitcher = new ol.control.LayerSwitcher({
-        tipLabel: 'Legende' // Optional label for button
-    });
+    tipLabel: 'Legende' // Optional label for button
+  });
   map.addControl(layerSwitcher);
   
-window.loadFeatures = function(response) {
-  roadsSource.addFeatures(geojsonFormat.readFeatures(response));
-  railwaysSource.addFeatures(geojsonFormat.readFeatures(response));
-  buildingsSource.addFeatures(geojsonFormat.readFeatures(response));
-};  
+  window.loadFeatures = function(response) {
+    roadsSource.addFeatures(geojsonFormat.readFeatures(response));
+    railwaysSource.addFeatures(geojsonFormat.readFeatures(response));
+    buildingsSource.addFeatures(geojsonFormat.readFeatures(response));
+  };  
   
 
+  // register context menu
   $(".map, #contextMenu").bind("contextmenu",function(e){
     return false;
   });
@@ -148,7 +148,6 @@ window.loadFeatures = function(response) {
     }
   });
  
-  
   $contextMenu.on("click", "a", function() {
      $contextMenu.hide();
   });
