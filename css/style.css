@@ -28,6 +28,9 @@ body {
 
 
 /* editing styles */
-.edit {
+nav .edit {
 	display: none;
+}
+nav .edit .btn-group {
+	margin-right: 2em;
 }

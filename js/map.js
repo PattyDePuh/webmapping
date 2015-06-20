@@ -162,32 +162,10 @@ $(function() {
      $contextMenu.hide();
   });
 
+  // enable bootstrap tooltips
+  $('[data-toggle="tooltip"]').tooltip({container: 'body'});
 
-
-
-  /* edit features */
-  var select = new ol.interaction.Select();
-
-  var modify = new ol.interaction.Modify({
-    features: select.getFeatures(),
-    // the SHIFT key must be pressed to delete vertices, so
-    // that new vertices can be drawn at the same position
-    // of existing vertices
-    deleteCondition: function(event) {
-      return ol.events.condition.shiftKeyOnly(event) &&
-          ol.events.condition.singleClick(event);
-    }
-  });
-  map.addInteraction(select);
-  map.addInteraction(modify);
-
-
-  // click listener
-  $("#edit").click(function() {
-    $(this).parent().toggleClass("active");
-    $(".edit").fadeToggle(120);
-
-    return false;
-  });
+  // edit features
+  var edit = new EditToolbar(map);
 
 });
