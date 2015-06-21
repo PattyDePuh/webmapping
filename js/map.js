@@ -77,12 +77,12 @@ $(function() {
 		        visible: true,
 		        source: new ol.source.MapQuest({layer: 'osm'})
 		      })
-             ]
-         }),
-         new ol.layer.Group({
-                title: 'Overlays',
-                layers: [
-                	new ol.layer.Vector({
+        ]
+      }),
+      new ol.layer.Group({
+        title: 'Overlays',
+        layers: [
+        	new ol.layer.Vector({
 						title: 'Roads',
 						visible: false,
 					  	source: roadsSource,
@@ -116,9 +116,8 @@ $(function() {
 					  })
 					})
 				]
-              })  
-                
-	    ],
+      })             
+    ],
     view: new ol.View({
       center: ol.proj.transform([8.047190 ,52.279562] , 'EPSG:4326', 'EPSG:3857'),
       zoom: 13

@@ -9,10 +9,11 @@ var edit = {};
 
 edit.Toolbar = function(map) {
   // do initialization here
-  this.interactions = new edit.Interactions();
-
   this.map = map;
+
+  this.interactions = new edit.Interactions();
   this.activeTool = null;
+  this.temp = {};
 
   // add all interactions to map, but disable them at the beginning
   _.each(this.interactions, function(interaction) {
@@ -35,11 +36,7 @@ $.extend(edit.Toolbar.prototype, {
     if (this.activeTool == null) {
       this.activate("modify");
     } else {
-      this.activeTool = null;
-      // deselect all
-      this.interactions.select.getFeatures().clear();
-      // deactivate all interactions
-      this.interactions.setActive(false);
+      this.cancel();
     }
   },
   activate: function(type) {
@@ -55,6 +52,22 @@ $.extend(edit.Toolbar.prototype, {
       this.interactions.select.setActive(true);
       this.interactions[type].setActive(true);
     }
+  },
+
+  cancel: function() {
+    this.activeTool = null;
+    // deselect all
+    this.interactions.select.getFeatures().clear();
+    // deactivate all interactions
+    this.interactions.setActive(false);
+
+    // restore all geometries
+    this.map.getLayers().forEach(function(layer) {
+      console.log(layer);
+    }, this);
+
+    // reset temp
+    this.temp = {};
   },
 
   save: function(el) {
@@ -79,15 +92,33 @@ $.extend(edit.Toolbar.prototype, {
       _this.activate("move");
     });
 
-    // abort button
-    $("#abort").click(function() {
-      _this.toggleToolbar();
+    // cancel button
+    $("#cancel").click(function() {
+      _this.cancel();
+    });
+
+    // select event listener
+    this.interactions.select.on('select', function(e) {
+      _.each(e.selected, function(feature) {
+        // if it doesnt already exist in temp
+        if (!(feature.getId() in _this.temp)) {
+          // save original geometry in temp
+          _this.temp[feature.getId()] = feature.getGeometry();
+        }
+      });
     });
   }
 });
 
+/**
+ * Class holding all the map interactions.
+ * @constructor
+ * @extends {Object}
+ */
 edit.Interactions = function() {
-  this.select = new ol.interaction.Select();
+  this.select = new ol.interaction.Select({
+    condition: ol.events.condition.click
+  });
   this.modify = new ol.interaction.Modify({
     features: this.select.getFeatures(),
     // the SHIFT key must be pressed to delete vertices, so
