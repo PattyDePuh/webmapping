@@ -1,16 +1,14 @@
 body {
+	padding-top: 50px;
+}
 
+.navbar {
+	margin-bottom: 0;
 }
 
 .map{
 	height: 500px;
 	width: 100%;
-	margin-top: 50px;
-	
-}
-
-.container{
-	
 }
 
 #routing {
@@ -24,7 +22,6 @@ body {
   position: absolute;
   display:none;
 }
-
 
 
 /* editing styles */
