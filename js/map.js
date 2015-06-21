@@ -166,6 +166,6 @@ $(function() {
   $('[data-toggle="tooltip"]').tooltip({container: 'body'});
 
   // edit features
-  var edit = new EditToolbar(map);
+  var editToolbar = new edit.Toolbar(map);
 
 });
