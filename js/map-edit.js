@@ -33,9 +33,7 @@ $.extend(edit.Toolbar.prototype, {
     // $("#map").focus();                        // set focus to map
 
     if (this.activeTool == null) {
-      
-      this.activateModify();
-
+      this.activate("modify");
     } else {
       this.activeTool = null;
       // deselect all
@@ -44,33 +42,18 @@ $.extend(edit.Toolbar.prototype, {
       this.interactions.setActive(false);
     }
   },
-  activateModify: function(opt_el) {
-    var el = opt_el || $("#modify-tool");
-
+  activate: function(type) {
     // do nothing if already selected
-    if (this.activeTool !== "modify") {
-      this.activeTool = "modify";
+    if (this.activeTool !== type) {
+      this.activeTool = type;
+      var el = $("#"+type+"-tool");
 
       $(".edit button").removeClass("active");
       el.addClass("active");
 
       this.interactions.setActive(false);
       this.interactions.select.setActive(true);
-      this.interactions.modify.setActive(true);
-    }
-  },
-  activateMove: function(opt_el) {
-    var el = opt_el || $("#move-tool");
-    // do nothing if already selected
-    if (this.activeTool !== "move") {
-      this.activeTool = "move";
-
-      $(".edit button").removeClass("active");
-      el.addClass("active");
-
-      this.interactions.setActive(false);
-      this.interactions.select.setActive(true);
-      this.interactions.move.setActive(true);
+      this.interactions[type].setActive(true);
     }
   },
 
@@ -89,17 +72,17 @@ $.extend(edit.Toolbar.prototype, {
 
     // edit tool
     $("#modify-tool").click(function() {
-      _this.activateModify($(this));
+      _this.activate("modify");
     });
     // move tool
     $("#move-tool").click(function() {
-      _this.activateMove($(this));
+      _this.activate("move");
     });
 
     // abort button
     $("#abort").click(function() {
       _this.toggleToolbar();
-    })
+    });
   }
 });
 
