@@ -111,7 +111,7 @@ edit.Interactions = function() {
     // that new vertices can be drawn at the same position
     // of existing vertices
     deleteCondition: function(event) {
-      return ol.events.condition.shiftKeyOnly(event) &&
+      return ol.events.condition.altKeyOnly(event) &&
           ol.events.condition.singleClick(event);
     }
   });

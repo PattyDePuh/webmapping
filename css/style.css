@@ -30,7 +30,7 @@ nav .edit {
 	white-space: nowrap;
 	float: right;
 }
-nav .edit .btn-group {
+nav .edit .spacer {
 	margin-right: 2em;
 }
 nav button.navbar-toggle {
