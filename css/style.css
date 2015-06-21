@@ -30,7 +30,12 @@ body {
 /* editing styles */
 nav .edit {
 	display: none;
+	white-space: nowrap;
+	float: right;
 }
 nav .edit .btn-group {
 	margin-right: 2em;
+}
+nav button.navbar-toggle {
+	margin-left: 15px;
 }

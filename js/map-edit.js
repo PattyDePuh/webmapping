@@ -73,19 +73,6 @@ $.extend(edit.Toolbar.prototype, {
       this.interactions.move.setActive(true);
     }
   },
-  activateDelete: function(opt_el) {
-    var el = opt_el || $("#delete-tool");
-    // do nothing if already selected
-    if (this.activeTool !== "delete") {
-      this.activeTool = "delete";
-
-      $(".edit button").removeClass("active");
-      el.addClass("active");
-
-      this.interactions.setActive(false);
-      this.interactions.select.setActive(true);
-    }
-  },
 
   save: function(el) {
 
@@ -108,13 +95,9 @@ $.extend(edit.Toolbar.prototype, {
     $("#move-tool").click(function() {
       _this.activateMove($(this));
     });
-    // delete tool
-    $("#delete-tool").click(function() {
-      _this.activateDelete($(this));
-    });
 
     // abort button
-    $("abort").click(function() {
+    $("#abort").click(function() {
       _this.toggleToolbar();
     })
   }

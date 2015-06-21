@@ -136,29 +136,29 @@ $(function() {
     return false;
   });
 
-  var $contextMenu = $("#contextMenu");
+  var contextMenu = $("#contextMenu");
   
   $("#map").mousedown(function(e) {
-  	if (e.which == 3){
-	    $contextMenu.css({
+  	if (e.which == 3) {          // only right mouse button
+	    contextMenu.css({
 	      display: "block",
 	      left: e.pageX,
 	      top: e.pageY
 	    });
 	    if (document.addEventListener) {
-    			document.addEventListener('contextmenu', function(e) {
+    		document.addEventListener('contextmenu', function(e) {
        				e.preventDefault();
-    			}, false);
+    		}, false);
 			} else {
-    			document.attachEvent('oncontextmenu', function() {
-       				window.event.returnValue = false;
-    			});
-			}	
+    		document.attachEvent('oncontextmenu', function() {
+       		window.event.returnValue = false;
+    	});
+		  }
       return false;
     }
   });
  
-  $contextMenu.on("click", "a", function() {
+  contextMenu.on("click", "a", function() {
      $contextMenu.hide();
   });
 
