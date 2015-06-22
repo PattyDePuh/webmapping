@@ -80,7 +80,7 @@ $.extend(edit.Toolbar.prototype, {
   },
 
   updateTemp: function(event, context) {
-    event.featureCollection.forEach(function(feature) {
+    event.features.forEach(function(feature) {
       // if it doesnt already exist in temp
       if (!(feature.getId() in this.temp)) {
         // save original geometry in temp
@@ -122,16 +122,6 @@ $.extend(edit.Toolbar.prototype, {
       console.log("modifyend!");
     });
 
-    // select event listener
-    // this.interactions.select.on('select', function(e) {
-    //   _.each(e.selected, function(feature) {
-    //     // if it doesnt already exist in temp
-    //     if (!(feature.getId() in _this.temp)) {
-    //       // save original geometry in temp
-    //       _this.temp[feature.getId()] = feature.getGeometry();
-    //     }
-    //   });
-    // });
   }
 });
 
@@ -141,12 +131,10 @@ $.extend(edit.Toolbar.prototype, {
  * @extends {Object}
  */
 edit.Interactions = function() {
-  this.select = new ol.interaction.Select({
-    condition: ol.events.condition.click
-  });
+  this.select = new ol.interaction.Select();
   this.modify = new ol.interaction.ModifyWithEvents({
     features: this.select.getFeatures(),
-    // the SHIFT key must be pressed to delete vertices, so
+    // the ALT key must be pressed to delete vertices, so
     // that new vertices can be drawn at the same position
     // of existing vertices
     deleteCondition: function(event) {
@@ -154,135 +142,10 @@ edit.Interactions = function() {
           ol.events.condition.singleClick(event);
     }
   });
-  this.move = new edit.Drag(this.select.getFeatures());
+  this.move = new ol.interaction.Drag(this.select.getFeatures());
 };
 edit.Interactions.prototype.setActive = function(active) {
   _.each(this, function(interaction) {
     interaction.setActive(active);
   });
-};
-
-
-/**
- * Move/drag interaction.
- * @constructor
- * @extends {ol.interaction.Pointer}
- */
-edit.Drag = function(features) {
-
-  ol.interaction.Pointer.call(this, {
-    handleDownEvent: edit.Drag.prototype.handleDownEvent,
-    handleDragEvent: edit.Drag.prototype.handleDragEvent,
-    handleMoveEvent: edit.Drag.prototype.handleMoveEvent,
-    handleUpEvent: edit.Drag.prototype.handleUpEvent
-  });
-
-  /**
-   * @type {ol.Pixel}
-   * @private
-   */
-  this.coordinate_ = null;
-
-  /**
-   * @type {string|undefined}
-   * @private
-   */
-  this.cursor_ = 'pointer';
-
-  /**
-   * @type {ol.Collection.<ol.Feature>}
-   * @private
-   */
-  this.features_ = features;
-
-  /**
-   * @type {string|undefined}
-   * @private
-   */
-  this.previousCursor_ = undefined;
-
-};
-ol.inherits(edit.Drag, ol.interaction.Pointer);
-
-
-/**
- * @param {ol.MapBrowserEvent} evt Map browser event.
- * @return {boolean} `true` to start the drag sequence.
- */
-edit.Drag.prototype.handleDownEvent = function(evt) {
-  var map = evt.map;
-
-  var feature = map.forEachFeatureAtPixel(evt.pixel,
-      function(feature, layer) {
-        return feature;
-      });
-
-  if (feature) {
-    // dispatch start event
-    this.dispatchEvent(new ol.ModifyEvent(ol.ModifyEventType.MODIFYSTART, this.features_));
-
-    this.coordinate_ = evt.coordinate;
-  }
-
-  return !!feature;
-};
-
-/**
- * @param {ol.MapBrowserEvent} evt Map browser event.
- */
-edit.Drag.prototype.handleDragEvent = function(evt) {
-  var map = evt.map;
-
-  var feature = map.forEachFeatureAtPixel(evt.pixel,
-    function(feature, layer) {
-      return feature;
-    });
-
-  var deltaX = evt.coordinate[0] - this.coordinate_[0];
-  var deltaY = evt.coordinate[1] - this.coordinate_[1];
-
-  this.features_.forEach(function(feature) {
-    var geometry = /** @type {ol.geom.SimpleGeometry} */
-      (feature.getGeometry());
-    geometry.translate(deltaX, deltaY);
-  }, this);
-
-  this.coordinate_[0] = evt.coordinate[0];
-  this.coordinate_[1] = evt.coordinate[1];
-};
-
-/**
- * @param {ol.MapBrowserEvent} evt Event.
- */
-edit.Drag.prototype.handleMoveEvent = function(evt) {
-  if (this.cursor_) {
-    var map = evt.map;
-    var feature = map.forEachFeatureAtPixel(evt.pixel,
-        function(feature, layer) {
-          return feature;
-        });
-    var element = evt.map.getTargetElement();
-    if (feature) {
-      if (element.style.cursor != this.cursor_) {
-        this.previousCursor_ = element.style.cursor;
-        element.style.cursor = this.cursor_;
-      }
-    } else if (this.previousCursor_ !== undefined) {
-      element.style.cursor = this.previousCursor_;
-      this.previousCursor_ = undefined;
-    }
-  }
-};
-
-/**
- * @param {ol.MapBrowserEvent} evt Map browser event.
- * @return {boolean} `false` to stop the drag sequence.
- */
-edit.Drag.prototype.handleUpEvent = function(evt) {
-  this.coordinate_ = null;
-
-  // dispatch end event
-  this.dispatchEvent(new ol.ModifyEvent(ol.ModifyEventType.MODIFYEND, this.features_));
-  // this.features_ = null;
-  return false;
 };
