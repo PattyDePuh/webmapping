@@ -77,6 +77,69 @@ $.extend(edit.Toolbar.prototype, {
 
   save: function(el) {
 
+    var showMsg = function(msg, opt_type, opt_duration) {
+      var type = opt_type ? opt_type : "success";
+      var duration = opt_duration ? opt_duration : 2000;
+
+      $("#response").text(msg).removeClass().addClass("alert alert-"+type).fadeIn(100, function() {
+        $(this).delay(duration).fadeOut('slow');      // wait duration seconds and fade out again
+      });
+      
+    };
+
+    if (_.isEmpty(this.temp)) {
+      showMsg("Nichts zu speichern!", "warning");
+      return false;     // return false if there's nothing to do
+    }
+
+    var osmids = [];          // osm ids of the modified geoms
+    var geometries = [];      // the modified geoms in wkt format
+    var deletions = [];       // osm ids to be deleted
+
+    // well known text
+    var format = new ol.format.WKT();
+
+    // fill post arrays
+    _.each(this.temp, function(val, key) {
+      osmids.push(val.current.get("osm_id"));
+      geometries.push(
+        format.writeGeometry(val.current.getGeometry())
+      );
+    }, this);
+
+    if (!_.isEmpty(osmids)) {
+      var service = "update";
+      // send post request
+      $.post("php/handleRequest.php",
+        {
+          "service": service,
+          "osm_id": osmids,
+          "geometry": geometries
+        },
+        function(msg) {
+          // the returned text from handleRequest.php is in msg
+          console.log(msg);
+          showMsg(msg);
+        }
+      );
+    }
+
+    if (!_.isEmpty(deletions)) {
+      var service = "delete";
+      // send post request
+      $.post("php/handleRequest.php",
+        {
+          "service": service,
+          "osm_id": deletions
+        },
+        function(msg) {
+          // the returned text from handleRequest.php is in msg
+          console.log(msg);
+          showMsg(msg);
+        }
+      );
+    }
+
   },
 
   updateTemp: function(event, context) {
@@ -115,12 +178,13 @@ $.extend(edit.Toolbar.prototype, {
       _this.toggleToolbar();
     });
 
+    // save button
+    $("#save").click(function() {
+      _this.save();
+    });
+
     this.interactions.modify.on('modifystart', function(e) { _this.updateTemp(e, _this); });
     this.interactions.move.on('modifystart', function(e) { _this.updateTemp(e, _this); });
-
-    this.interactions.modify.on('modifyend', function(e) {
-      console.log("modifyend!");
-    });
 
   }
 });

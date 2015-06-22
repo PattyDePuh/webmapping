@@ -9,6 +9,7 @@ body {
 .map{
 	height: 500px;
 	width: 100%;
+	position: relative;
 }
 
 #routing {
@@ -35,4 +36,19 @@ nav .edit .spacer {
 }
 nav button.navbar-toggle {
 	margin-left: 15px;
+}
+
+.center-wrapper {
+	position: absolute;
+	left: 50%;
+}
+.center-wrapper > div {
+	position: relative;
+	left: -50%;
+}
+
+#map #response {
+	z-index: 99;
+	margin-top: 12px;
+	display: none;
 }
