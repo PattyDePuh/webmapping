@@ -157,7 +157,7 @@ $(function() {
   });
  
   contextMenu.on("click", "a", function() {
-     $contextMenu.hide();
+     contextMenu.hide();
   });
 
   // enable bootstrap tooltips

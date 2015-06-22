@@ -64,8 +64,11 @@ $.extend(edit.Toolbar.prototype, {
 
     // restore all geometries
     if (! _.isEmpty(this.temp)) {
-      var source = _.find(this.sources, function(source) {  });
+      // var source = _.find(this.sources, function(source) {  });
 
+      _.each(this.temp, function(el, fid) {
+        el.current.setGeometry(el.oldGeom);
+      }, this);
 
       // reset temp
       this.temp = {};
@@ -96,23 +99,38 @@ $.extend(edit.Toolbar.prototype, {
 
     // cancel button
     $("#cancel").click(function() {
-      _this.cancel();
+      _this.toggleToolbar();
     });
 
     this.interactions.modify.on('modifystart', function(e) {
       console.log("modify start!");
-    });
-
-    // select event listener
-    this.interactions.select.on('select', function(e) {
-      _.each(e.selected, function(feature) {
+      e.featureCollection.forEach(function(feature) {
         // if it doesnt already exist in temp
         if (!(feature.getId() in _this.temp)) {
           // save original geometry in temp
-          _this.temp[feature.getId()] = feature.getGeometry();
+          console.log("added to temp!");
+          _this.temp[feature.getId()] = {
+            current: feature,
+            oldGeom: feature.getGeometry().clone()    // deep copy
+          };
         }
       });
     });
+
+    this.interactions.modify.on('modifyend', function(e) {
+      console.log("modifyend!");
+    });
+
+    // select event listener
+    // this.interactions.select.on('select', function(e) {
+    //   _.each(e.selected, function(feature) {
+    //     // if it doesnt already exist in temp
+    //     if (!(feature.getId() in _this.temp)) {
+    //       // save original geometry in temp
+    //       _this.temp[feature.getId()] = feature.getGeometry();
+    //     }
+    //   });
+    // });
   }
 });
 
