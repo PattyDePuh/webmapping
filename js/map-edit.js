@@ -79,6 +79,19 @@ $.extend(edit.Toolbar.prototype, {
 
   },
 
+  updateTemp: function(event, context) {
+    event.featureCollection.forEach(function(feature) {
+      // if it doesnt already exist in temp
+      if (!(feature.getId() in this.temp)) {
+        // save original geometry in temp
+        this.temp[feature.getId()] = {
+          current: feature,
+          oldGeom: feature.getGeometry().clone()    // deep copy
+        };
+      }
+    }, context);
+  },
+
   registerListeners: function() {
     var _this = this;
 
@@ -102,20 +115,8 @@ $.extend(edit.Toolbar.prototype, {
       _this.toggleToolbar();
     });
 
-    this.interactions.modify.on('modifystart', function(e) {
-      console.log("modify start!");
-      e.featureCollection.forEach(function(feature) {
-        // if it doesnt already exist in temp
-        if (!(feature.getId() in _this.temp)) {
-          // save original geometry in temp
-          console.log("added to temp!");
-          _this.temp[feature.getId()] = {
-            current: feature,
-            oldGeom: feature.getGeometry().clone()    // deep copy
-          };
-        }
-      });
-    });
+    this.interactions.modify.on('modifystart', function(e) { _this.updateTemp(e, _this); });
+    this.interactions.move.on('modifystart', function(e) { _this.updateTemp(e, _this); });
 
     this.interactions.modify.on('modifyend', function(e) {
       console.log("modifyend!");
@@ -217,6 +218,9 @@ edit.Drag.prototype.handleDownEvent = function(evt) {
       });
 
   if (feature) {
+    // dispatch start event
+    this.dispatchEvent(new ol.ModifyEvent(ol.ModifyEventType.MODIFYSTART, this.features_));
+
     this.coordinate_ = evt.coordinate;
   }
 
@@ -276,6 +280,9 @@ edit.Drag.prototype.handleMoveEvent = function(evt) {
  */
 edit.Drag.prototype.handleUpEvent = function(evt) {
   this.coordinate_ = null;
+
+  // dispatch end event
+  this.dispatchEvent(new ol.ModifyEvent(ol.ModifyEventType.MODIFYEND, this.features_));
   // this.features_ = null;
   return false;
 };
