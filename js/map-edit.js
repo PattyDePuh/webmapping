@@ -1,15 +1,16 @@
-/**
- * Class providing functionallity to edit features displayed on the map.
- * @constructor
- * @param {ol.Map} map The OpenLayers map which should be edtitable.
- */
-
 // namespace edit
 var edit = {};
 
-edit.Toolbar = function(map) {
+/**
+ * Class providing functionallity to edit features displayed on the map.
+ * @constructor
+ * @param {ol.Map} map The OpenLayers map which should be editable.
+ * @param {ol.source.Vector} sources All the editable sources.
+ */
+edit.Toolbar = function(map, sources) {
   // do initialization here
   this.map = map;
+  this.sources = sources;
 
   this.interactions = new edit.Interactions();
   this.activeTool = null;
@@ -62,12 +63,13 @@ $.extend(edit.Toolbar.prototype, {
     this.interactions.setActive(false);
 
     // restore all geometries
-    this.map.getLayers().forEach(function(layer) {
-      console.log(layer);
-    }, this);
+    if (! _.isEmpty(this.temp)) {
+      var source = _.find(this.sources, function(source) {  });
 
-    // reset temp
-    this.temp = {};
+
+      // reset temp
+      this.temp = {};
+    }
   },
 
   save: function(el) {
@@ -97,6 +99,10 @@ $.extend(edit.Toolbar.prototype, {
       _this.cancel();
     });
 
+    this.interactions.modify.on('modifystart', function(e) {
+      console.log("modify start!");
+    });
+
     // select event listener
     this.interactions.select.on('select', function(e) {
       _.each(e.selected, function(feature) {
@@ -119,7 +125,7 @@ edit.Interactions = function() {
   this.select = new ol.interaction.Select({
     condition: ol.events.condition.click
   });
-  this.modify = new ol.interaction.Modify({
+  this.modify = new ol.interaction.ModifyWithEvents({
     features: this.select.getFeatures(),
     // the SHIFT key must be pressed to delete vertices, so
     // that new vertices can be drawn at the same position

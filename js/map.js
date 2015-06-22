@@ -4,64 +4,63 @@ $(function() {
   // format used to parse WFS GetFeature responses
   var geojsonFormat = new ol.format.GeoJSON();
 
-  var roadsSource = new ol.source.Vector({
-    format: geojsonFormat,
-    loader: function(extent, resolution, projection) {
-      var url = 'http://vm372.rz.uni-osnabrueck.de:8080/geoserver/webmapping_webgis/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=webmapping_webgis:roads&' +
-                'outputFormat=text/javascript&format_options=callback:loadRoadFeatures' +
-                '&srsname=EPSG:3857&bbox=' + extent.join(',') + ',EPSG:3857';
-      // use jsonp: false to prevent jQuery from adding the "callback"
-      // parameter to the URL
-     $.ajax({url: url, dataType: 'jsonp', jsonp: false});
-    },
-    strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-      maxZoom: 19
-    }))
-  });
+  var sources = {
+    roads: new ol.source.Vector({
+      format: geojsonFormat,
+      loader: function(extent, resolution, projection) {
+        var url = 'http://vm372.rz.uni-osnabrueck.de:8080/geoserver/webmapping_webgis/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=webmapping_webgis:roads&' +
+                  'outputFormat=text/javascript&format_options=callback:loadRoadFeatures' +
+                  '&srsname=EPSG:3857&bbox=' + extent.join(',') + ',EPSG:3857';
+        // use jsonp: false to prevent jQuery from adding the "callback"
+        // parameter to the URL
+       $.ajax({url: url, dataType: 'jsonp', jsonp: false});
+      },
+      strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+        maxZoom: 19
+      }))
+    }),
+    railways: new ol.source.Vector({
+      format: geojsonFormat,
+      loader: function(extent, resolution, projection) {
+        var url = 'http://vm372.rz.uni-osnabrueck.de:8080/geoserver/webmapping_webgis/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=webmapping_webgis:railways&' +
+                  'outputFormat=text/javascript&format_options=callback:loadRailwaysFeatures' +
+                  '&srsname=EPSG:3857&bbox=' + extent.join(',') + ',EPSG:3857';
+        // use jsonp: false to prevent jQuery from adding the "callback"
+        // parameter to the URL
+        $.ajax({url: url, dataType: 'jsonp', jsonp: false});
+      },
+      strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+        maxZoom: 19
+      }))
+    }),
+    buildings: new ol.source.Vector({
+      format: geojsonFormat,
+      loader: function(extent, resolution, projection) {
+        var url = 'http://vm372.rz.uni-osnabrueck.de:8080/geoserver/webmapping_webgis/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=webmapping_webgis:buildings&' +
+                  'outputFormat=text/javascript&format_options=callback:loadBuildingsFeatures' +
+                  '&srsname=EPSG:3857&bbox=' + extent.join(',') + ',EPSG:3857';
+        // use jsonp: false to prevent jQuery from adding the "callback"
+        // parameter to the URL
+        $.ajax({url: url, dataType: 'jsonp', jsonp: false});
+      },
+      strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
+        maxZoom: 19
+      }))
+    })
+  }
 
+  // callback functions
   window.loadRoadFeatures = function(response) {
-    roadsSource.addFeatures(geojsonFormat.readFeatures(response));
-  };  
-
-  var railwaysSource = new ol.source.Vector({
-    format: geojsonFormat,
-    loader: function(extent, resolution, projection) {
-      var url = 'http://vm372.rz.uni-osnabrueck.de:8080/geoserver/webmapping_webgis/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=webmapping_webgis:railways&' +
-                'outputFormat=text/javascript&format_options=callback:loadRailwaysFeatures' +
-                '&srsname=EPSG:3857&bbox=' + extent.join(',') + ',EPSG:3857';
-      // use jsonp: false to prevent jQuery from adding the "callback"
-      // parameter to the URL
-      $.ajax({url: url, dataType: 'jsonp', jsonp: false});
-    },
-    strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-      maxZoom: 19
-    }))
-  });
-
-  window.loadRailwaysFeatures = function(response) {
-    railwaysSource.addFeatures(geojsonFormat.readFeatures(response));
+    sources.roads.addFeatures(geojsonFormat.readFeatures(response));
   };
 
-
-  var buildingsSource = new ol.source.Vector({
-    format: geojsonFormat,
-    loader: function(extent, resolution, projection) {
-      var url = 'http://vm372.rz.uni-osnabrueck.de:8080/geoserver/webmapping_webgis/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=webmapping_webgis:buildings&' +
-                'outputFormat=text/javascript&format_options=callback:loadBuildingsFeatures' +
-                '&srsname=EPSG:3857&bbox=' + extent.join(',') + ',EPSG:3857';
-      // use jsonp: false to prevent jQuery from adding the "callback"
-      // parameter to the URL
-      $.ajax({url: url, dataType: 'jsonp', jsonp: false});
-    },
-    strategy: ol.loadingstrategy.tile(ol.tilegrid.createXYZ({
-      maxZoom: 19
-    }))
-  });
+  window.loadRailwaysFeatures = function(response) {
+    sources.railways.addFeatures(geojsonFormat.readFeatures(response));
+  };
 
   window.loadBuildingsFeatures = function(response) {
-    buildingsSource.addFeatures(geojsonFormat.readFeatures(response));
-  };  
-  
+    sources.buildings.addFeatures(geojsonFormat.readFeatures(response));
+  };
 
   // add base map
   var map = new ol.Map({
@@ -85,7 +84,7 @@ $(function() {
         	new ol.layer.Vector({
 						title: 'Roads',
 						visible: false,
-					  	source: roadsSource,
+					  	source: sources.roads,
 					  	style: new ol.style.Style({
 					    stroke: new ol.style.Stroke({
 					      color: 'rgba(0, 0, 255, 1.0)',
@@ -96,7 +95,7 @@ $(function() {
 					new ol.layer.Vector({
 						title: 'Railways',
 						visible: false,
-					  	source: railwaysSource,
+					  	source: sources.railways,
 					  	style: new ol.style.Style({
 					    stroke: new ol.style.Stroke({
 					      color: 'rgba(0, 255, 0, 1.0)',
@@ -107,7 +106,7 @@ $(function() {
 					new ol.layer.Vector({
 						title: 'Buildings',
 						visible: false,
-					  	source: buildingsSource,
+					  	source: sources.buildings,
 					  	style: new ol.style.Style({
 					    stroke: new ol.style.Stroke({
 					      color: 'rgba(255, 0 , 0, 1.0)',
@@ -165,6 +164,6 @@ $(function() {
   $('[data-toggle="tooltip"]').tooltip({container: 'body'});
 
   // edit features
-  var editToolbar = new edit.Toolbar(map);
+  var editToolbar = new edit.Toolbar(map, sources);
 
 });
