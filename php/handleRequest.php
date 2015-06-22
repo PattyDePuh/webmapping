@@ -31,6 +31,15 @@ switch($_POST["service"]){
     //Aendern der Geomtrie
     case "update":
         for($index = 0; $index < count($_POST["osm_id"]); $index++){
+        	//Sanity-Check
+        	if(!is_numeric($_POST["osm_id"][$index])){
+        		echo("Error: '".$_POST["osm_id"][$index]."' ist keine gueltige OSM_ID (keine Zahl!)");
+        		return;
+        	}
+        	//Hier muss noch ein Test rein, um SQL-Injection zu verhindern!!!
+        	//
+        	
+        	//Query Aufbau
             $query = "UPDATE buildings SET geom = st_geomfromtext('".$_POST["geometry"][$index]."', 4326) WHERE osm_id = ".$_POST["osm_id"][$index];
             $result = pg_query($db_connection, $query);
             if(!$result){
@@ -43,6 +52,12 @@ switch($_POST["service"]){
     //Loeschen des Features
     case "delete":
         for($index = 0; $index < count($_POST["osm_id"]); $index++){
+        	//Sanity-Check
+        	if(!is_numeric($_POST["osm_id"][$index])){
+        		echo("Error: '".$_POST["osm_id"][$index]."' ist keine gueltige OSM_ID (keine Zahl!)");
+        		return;
+        	}
+        	//Query Aufbau
             $query = "UPDATE buildings WHERE osm_id = ".$_POST["osm_id"][$index];
             $result = pg_query($db_connection, $query);
             if(!$result){
