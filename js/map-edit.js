@@ -27,6 +27,8 @@ edit.Toolbar = function(map, sources) {
 
 $.extend(edit.Toolbar.prototype, {
   // class methods here
+  
+
   toggleToolbar: function(opt_el) {
     var el = opt_el || $("#edit");
 
@@ -40,6 +42,11 @@ $.extend(edit.Toolbar.prototype, {
       this.cancel();
     }
   },
+
+  /**
+   * Activate given interaction.
+   * @param  {String} type The interaction to be activated.
+   */
   activate: function(type) {
     // do nothing if already selected
     if (this.activeTool !== type) {
@@ -55,6 +62,9 @@ $.extend(edit.Toolbar.prototype, {
     }
   },
 
+  /**
+   * Abort changes action.
+   */
   cancel: function() {
     this.activeTool = null;
     // deselect all
@@ -75,8 +85,18 @@ $.extend(edit.Toolbar.prototype, {
     }
   },
 
-  save: function(el) {
+  /**
+   * Save features action.
+   * @return {Boolean}    Return true on success, otherwise false.
+   */
+  save: function() {
 
+    /**
+     * Helper function to show a msg on top of the map.
+     * @param  {String} msg          The message.
+     * @param  {String} opt_type     Optional type (success, warning, danger)
+     * @param  {Number} opt_duration Optional duration how long the msg should be shown.
+     */
     var showMsg = function(msg, opt_type, opt_duration) {
       var type = opt_type ? opt_type : "success";
       var duration = opt_duration ? opt_duration : 2000;
@@ -84,7 +104,6 @@ $.extend(edit.Toolbar.prototype, {
       $("#response").text(msg).removeClass().addClass("alert alert-"+type).fadeIn(100, function() {
         $(this).delay(duration).fadeOut('slow');      // wait duration seconds and fade out again
       });
-      
     };
 
     if (_.isEmpty(this.temp)) {
@@ -95,6 +114,7 @@ $.extend(edit.Toolbar.prototype, {
     var osmids = [];          // osm ids of the modified geoms
     var geometries = [];      // the modified geoms in wkt format
     var deletions = [];       // osm ids to be deleted
+    var _this = this;
 
     // well known text
     var format = new ol.format.WKT();
@@ -118,8 +138,8 @@ $.extend(edit.Toolbar.prototype, {
         },
         function(msg) {
           // the returned text from handleRequest.php is in msg
-          console.log(msg);
           showMsg(msg);
+          _this.temp = {};    // reset temp
         }
       );
     }
@@ -134,12 +154,13 @@ $.extend(edit.Toolbar.prototype, {
         },
         function(msg) {
           // the returned text from handleRequest.php is in msg
-          console.log(msg);
           showMsg(msg);
+          _this.temp = {};    // reset temp
         }
       );
     }
 
+    return true;
   },
 
   updateTemp: function(event, context) {

@@ -37,7 +37,7 @@ switch($_POST["service"]){
         		return;
         	}
         	//Hier muss noch ein Test rein, um SQL-Injection zu verhindern!!!
-        	//
+        	
         	
         	//Query Aufbau
             $query = "UPDATE buildings SET geom = st_geomfromtext('".$_POST["geometry"][$index]."', 4326) WHERE osm_id = ".$_POST["osm_id"][$index];
