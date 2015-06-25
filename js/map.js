@@ -1,4 +1,8 @@
 // dom ready
+
+// Output from box selection (scheme: "layer.gid")
+var boxSelection = [];
+
 $(function() {
 
   // format used to parse WFS GetFeature responses
@@ -159,7 +163,60 @@ $(function() {
   contextMenu.on("click", "a", function() {
      contextMenu.hide();
   });
+  
+  
+  
+  
+  
+  
+  // a normal select interaction to handle click
+  var select = new ol.interaction.Select();
+  map.addInteraction(select);
 
+  var selectedFeatures = select.getFeatures();
+	
+  // a DragBox interaction used to select features by drawing boxes
+  var dragBox = new ol.interaction.DragBox({
+  condition: ol.events.condition.shiftKeyOnly,
+  style: new ol.style.Style({
+  stroke: new ol.style.Stroke({
+    color: [0, 0, 255, 1.5]
+  })
+  })
+  });
+  
+  map.addInteraction(dragBox);
+
+  dragBox.on('boxend', function(e) {
+  // features that intersect the box are added to the collection of
+  // selected features, and their "gid" is stored in boxSelection (global)
+  var extent = dragBox.getGeometry().getExtent();
+  sources.roads.forEachFeatureIntersectingExtent(extent, function(feature) {
+    selectedFeatures.push(feature);
+	boxSelection.push(feature.getId());
+  });
+  sources.buildings.forEachFeatureIntersectingExtent(extent, function(feature) {
+    selectedFeatures.push(feature);
+    boxSelection.push(feature.getId());
+  });
+  sources.railways.forEachFeatureIntersectingExtent(extent, function(feature) {
+    selectedFeatures.push(feature);
+    boxSelection.push(feature.getId());
+  });
+  });
+
+  // clear selection when drawing a new box and when clicking on the map
+  dragBox.on('boxstart', function(e) {
+  selectedFeatures.clear();
+  });
+  map.on('click', function() {
+  selectedFeatures.clear();
+  });
+  
+  
+  
+  
+  
   // enable bootstrap tooltips
   $('[data-toggle="tooltip"]').tooltip({container: 'body'});
 
