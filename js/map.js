@@ -163,12 +163,7 @@ $(function() {
   contextMenu.on("click", "a", function() {
      contextMenu.hide();
   });
-  
-  
-  
-  
-  
-  
+    
   // a normal select interaction to handle click
   var select = new ol.interaction.Select();
   map.addInteraction(select);
@@ -212,10 +207,6 @@ $(function() {
   map.on('click', function() {
   selectedFeatures.clear();
   });
-  
-  
-  
-  
   
   // enable bootstrap tooltips
   $('[data-toggle="tooltip"]').tooltip({container: 'body'});
