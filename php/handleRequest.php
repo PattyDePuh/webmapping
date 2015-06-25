@@ -47,7 +47,8 @@ switch($_POST["service"]){
                 return;
             }
         }
-        break;
+        echo ("success!");
+        return;
     
     //Loeschen des Features
     case "delete":
@@ -65,7 +66,8 @@ switch($_POST["service"]){
                 return;
             }
         }
-        break;
+        echo ("success!");
+        return;
     
     //Fehler, falls falsche Angabe beim Service.
     default;
@@ -73,5 +75,4 @@ switch($_POST["service"]){
     return;
 }
 
-echo ("success!");
 ?>
