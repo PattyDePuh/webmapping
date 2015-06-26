@@ -200,9 +200,11 @@ $(function() {
   });
   });
 
-  // clear selection when drawing a new box and when clicking on the map
+  // clear selection and boxSelection when drawing a new box and 
+  // clear selection when clicking on the map
   dragBox.on('boxstart', function(e) {
   selectedFeatures.clear();
+  boxSelection.length = 0;
   });
   map.on('click', function() {
   selectedFeatures.clear();
