@@ -2,6 +2,10 @@
 
 // Output from box selection (scheme: "layer.gid")
 var boxSelection = [];
+// Variablen für den Routenplaner
+var contrvar = 0;
+var lon;
+var lat;
 
 $(function() {
 
@@ -215,5 +219,21 @@ $(function() {
 
   // edit features
   var editToolbar = new edit.Toolbar(map, sources);
-
+//Routenplaner, Marker setzen:
+		map.on('click', function(evt){
+			if(contrvar == 1 || contrvar == 2){
+				var coord = evt.coordinate;
+				var transformed_coordinate = ol.proj.transform(coord, "EPSG:900913", "EPSG:4326");
+				lon = transformed_coordinate[0];
+				lat = transformed_coordinate[1];
+				console.log(transformed_coordinate)
+					if(contrvar == 1){
+						startMarkerSetzen();
+					}
+					if(contrvar == 2){
+						zielMarkerSetzen();
+					}
+				contrvar = 0;
+				}
+			})
 });
