@@ -97,10 +97,14 @@
 		<div class="form-group">
 		  <label for="Start">Startpunkt</label>
 		  <input type="text" class="form-control" id="start" placeholder="Adresse 1">
+		  <br>
+		  <button class="btn btn-default" onclick="startSetzen()">Setze Startpunkt auf Karte</button>
 		</div>
 		<div class="form-group">
 		  <label for="ziel">Zielpunkt</label>
 		  <input type="text" class="form-control" id="ziel" placeholder="Adresse 2 ">
+		  <br>
+		  <button class="btn btn-default" onclick="zielSetzen()">Setze Zielpunkt auf Karte</button>
 		</div>
 		<button type="submit" class="btn btn-default">Route berechnen</button>
 	  </form>
@@ -118,8 +122,6 @@
 	  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
 	    <li><a tabindex="-1" href="#">Objekt löschen</a></li>
 	    <li><a tabindex="-1" href="#">Objektattribute anzeigen</a></li>
-	    <li><a tabindex="-1" href="#">Setze als Startpunkt</a></li>
-	    <li><a tabindex="-1" href="#">Setze als Endpunkt</a></li>
 	    <li><a tabindex="-1" href="#">Abbrechen</a></li>
 	    </ul>
 	</div>
