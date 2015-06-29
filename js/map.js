@@ -2,10 +2,13 @@
 
 // Output from box selection (scheme: "layer.gid")
 var boxSelection = [];
-// Variablen für den Routenplaner
+
+// Variablen für Routenplaner
 var contrvar = 0;
-var lon;
-var lat;
+var lonStart;
+var latStart;
+var lonZiel;
+var latZiel;
 
 $(function() {
 
@@ -130,11 +133,14 @@ $(function() {
       zoom: 13
     })
   });
-  
+
   var layerSwitcher = new ol.control.LayerSwitcher({
     tipLabel: 'Legende' // Optional label for button
   });
   map.addControl(layerSwitcher);
+  
+  
+ 
   
 
   // register context menu
@@ -142,15 +148,23 @@ $(function() {
     return false;
   });
 
-  var contextMenu = $("#contextMenu");
+ 
+  var contextMenu = $("#contextMenu");	
+				
+		
   
   $("#map").mousedown(function(e) {
-  	if (e.which == 3) {          // only right mouse button
+	
+	 
+  	if (e.which == 3) { // only right mouse button
 	    contextMenu.css({
 	      display: "block",
 	      left: e.pageX,
 	      top: e.pageY
 	    });
+		
+		//Koordinaten angeben 
+		
 	    if (document.addEventListener) {
     		document.addEventListener('contextmenu', function(e) {
        				e.preventDefault();
@@ -160,12 +174,14 @@ $(function() {
        		window.event.returnValue = false;
     	});
 		  }
+		var position = $( 'contextmenu' ).position();
       return false;
     }
   });
  
-  contextMenu.on("click", "a", function() {
-     contextMenu.hide();
+	 
+   contextMenu.on("click", "a", function() {
+    contextMenu.hide();
   });
     
   // a normal select interaction to handle click
@@ -219,21 +235,27 @@ $(function() {
 
   // edit features
   var editToolbar = new edit.Toolbar(map, sources);
+  
 //Routenplaner, Marker setzen:
 		map.on('click', function(evt){
-			if(contrvar == 1 || contrvar == 2){
+			if(contrvar == 1){
 				var coord = evt.coordinate;
 				var transformed_coordinate = ol.proj.transform(coord, "EPSG:900913", "EPSG:4326");
-				lon = transformed_coordinate[0];
-				lat = transformed_coordinate[1];
-				console.log(transformed_coordinate)
-					if(contrvar == 1){
-						startMarkerSetzen();
-					}
-					if(contrvar == 2){
-						zielMarkerSetzen();
-					}
-				contrvar = 0;
+				lonStart = transformed_coordinate[0];
+				latStart = transformed_coordinate[1];
+				startMarkerSetzen();
 				}
-			})
+				if(contrvar == 2){
+				var coord = evt.coordinate;
+				var transformed_coordinate = ol.proj.transform(coord, "EPSG:900913", "EPSG:4326");
+				lonZiel = transformed_coordinate[0];
+				latZiel = transformed_coordinate[1];
+				zielMarkerSetzen();
+				}
+				contrvar = 0;
+				})
+			
+			
+			
 });
+
