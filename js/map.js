@@ -1,5 +1,3 @@
-// dom ready
-
 // Output from box selection (scheme: "layer.gid")
 var boxSelection = [];
 
@@ -10,6 +8,7 @@ var latStart;
 var lonZiel;
 var latZiel;
 
+// dom ready
 $(function() {
 
   // format used to parse WFS GetFeature responses
@@ -180,12 +179,18 @@ $(function() {
     contextMenu.on("click", "a", function() {
     contextMenu.hide();
   });
-    
-  // a normal select interaction to handle click
-  var select = new ol.interaction.Select();
-  map.addInteraction(select);
+  
 
-  var selectedFeatures = select.getFeatures();
+  // enable bootstrap tooltips
+  $('[data-toggle="tooltip"]').tooltip({container: 'body'});
+
+
+  // edit features
+  var editToolbar = new edit.Toolbar(map, sources);
+
+
+  // use the select interaction from the edit toolbar to handle click
+  var selectedFeatures = editToolbar.interactions.select.getFeatures();
 	
   // a DragBox interaction used to select features by drawing boxes
   var dragBox = new ol.interaction.DragBox({
@@ -226,14 +231,9 @@ $(function() {
   map.on('click', function() {
     selectedFeatures.clear();
   });
-  
-  // enable bootstrap tooltips
-  $('[data-toggle="tooltip"]').tooltip({container: 'body'});
 
-  // edit features
-  var editToolbar = new edit.Toolbar(map, sources);
   
-  //Routenplaner, Marker setzen:
+  // Routenplaner, Marker setzen:
 	map.on('click', function(evt) {
 		if(contrvar == 1) {
 			var coord = evt.coordinate;
