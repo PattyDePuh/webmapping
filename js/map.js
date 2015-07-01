@@ -141,7 +141,6 @@ $(function() {
   
   
  
-  
 
   // register context menu
   $(".map, #contextMenu").bind("contextmenu",function(e){
@@ -154,33 +153,31 @@ $(function() {
 		
   
   $("#map").mousedown(function(e) {
-	
 	 
   	if (e.which == 3) { // only right mouse button
 	    contextMenu.css({
 	      display: "block",
 	      left: e.pageX,
 	      top: e.pageY
-	    });
+      });
 		
-		//Koordinaten angeben 
+		  //Koordinaten angeben 
 		
 	    if (document.addEventListener) {
     		document.addEventListener('contextmenu', function(e) {
-       				e.preventDefault();
+       		e.preventDefault();
     		}, false);
 			} else {
     		document.attachEvent('oncontextmenu', function() {
        		window.event.returnValue = false;
-    	});
+        });
 		  }
-		var position = $( 'contextmenu' ).position();
+  		var position = $( 'contextmenu' ).position();
       return false;
     }
   });
  
-	 
-   contextMenu.on("click", "a", function() {
+    contextMenu.on("click", "a", function() {
     contextMenu.hide();
   });
     
@@ -192,42 +189,42 @@ $(function() {
 	
   // a DragBox interaction used to select features by drawing boxes
   var dragBox = new ol.interaction.DragBox({
-  condition: ol.events.condition.shiftKeyOnly,
-  style: new ol.style.Style({
-  stroke: new ol.style.Stroke({
-    color: [0, 0, 255, 1.5]
-  })
-  })
+    condition: ol.events.condition.shiftKeyOnly,
+    style: new ol.style.Style({
+      stroke: new ol.style.Stroke({
+        color: [0, 0, 255, 1.5]
+      })
+    })
   });
   
   map.addInteraction(dragBox);
 
   dragBox.on('boxend', function(e) {
-  // features that intersect the box are added to the collection of
-  // selected features, and their "gid" is stored in boxSelection (global)
-  var extent = dragBox.getGeometry().getExtent();
-  sources.roads.forEachFeatureIntersectingExtent(extent, function(feature) {
-    selectedFeatures.push(feature);
-	boxSelection.push(feature.getId());
-  });
-  sources.buildings.forEachFeatureIntersectingExtent(extent, function(feature) {
-    selectedFeatures.push(feature);
-    boxSelection.push(feature.getId());
-  });
-  sources.railways.forEachFeatureIntersectingExtent(extent, function(feature) {
-    selectedFeatures.push(feature);
-    boxSelection.push(feature.getId());
-  });
+    // features that intersect the box are added to the collection of
+    // selected features, and their "gid" is stored in boxSelection (global)
+    var extent = dragBox.getGeometry().getExtent();
+    sources.roads.forEachFeatureIntersectingExtent(extent, function(feature) {
+      selectedFeatures.push(feature);
+  	boxSelection.push(feature.getId());
+    });
+    sources.buildings.forEachFeatureIntersectingExtent(extent, function(feature) {
+      selectedFeatures.push(feature);
+      boxSelection.push(feature.getId());
+    });
+    sources.railways.forEachFeatureIntersectingExtent(extent, function(feature) {
+      selectedFeatures.push(feature);
+      boxSelection.push(feature.getId());
+    });
   });
 
   // clear selection and boxSelection when drawing a new box and 
   // clear selection when clicking on the map
   dragBox.on('boxstart', function(e) {
-  selectedFeatures.clear();
-  boxSelection.length = 0;
+    selectedFeatures.clear();
+    boxSelection.length = 0;
   });
   map.on('click', function() {
-  selectedFeatures.clear();
+    selectedFeatures.clear();
   });
   
   // enable bootstrap tooltips
@@ -236,26 +233,25 @@ $(function() {
   // edit features
   var editToolbar = new edit.Toolbar(map, sources);
   
-//Routenplaner, Marker setzen:
-		map.on('click', function(evt){
-			if(contrvar == 1){
-				var coord = evt.coordinate;
-				var transformed_coordinate = ol.proj.transform(coord, "EPSG:900913", "EPSG:4326");
-				lonStart = transformed_coordinate[0];
-				latStart = transformed_coordinate[1];
-				startMarkerSetzen();
-				}
-				if(contrvar == 2){
-				var coord = evt.coordinate;
-				var transformed_coordinate = ol.proj.transform(coord, "EPSG:900913", "EPSG:4326");
-				lonZiel = transformed_coordinate[0];
-				latZiel = transformed_coordinate[1];
-				zielMarkerSetzen();
-				}
-				contrvar = 0;
-				})
+  //Routenplaner, Marker setzen:
+	map.on('click', function(evt) {
+		if(contrvar == 1) {
+			var coord = evt.coordinate;
+			var transformed_coordinate = ol.proj.transform(coord, "EPSG:900913", "EPSG:4326");
+			lonStart = transformed_coordinate[0];
+			latStart = transformed_coordinate[1];
+			startMarkerSetzen();
+		}
+		if(contrvar == 2) {
+			var coord = evt.coordinate;
+			var transformed_coordinate = ol.proj.transform(coord, "EPSG:900913", "EPSG:4326");
+			lonZiel = transformed_coordinate[0];
+			latZiel = transformed_coordinate[1];
+			zielMarkerSetzen();
+		}
+		contrvar = 0;
+	});
 			
-			
-			
+	
 });
 
