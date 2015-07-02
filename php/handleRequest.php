@@ -40,7 +40,7 @@ switch($_POST["service"]){
         	
         	
         	//Query Aufbau
-            $query = "UPDATE buildings SET geom = st_geomfromtext('".$_POST["geometry"][$index]."', 4326) WHERE osm_id = ".$_POST["osm_id"][$index];
+            $query = "UPDATE buildings SET geom = st_transform(st_geomfromtext('".$_POST["geometry"][$index]."', 3857), 4326) WHERE osm_id = ".$_POST["osm_id"][$index];
             $result = pg_query($db_connection, $query);
             if(!$result){
                 echo ("Error: Fehler beim Ausfuehren der Query: '".$query."' !");
